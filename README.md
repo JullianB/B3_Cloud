@@ -19,7 +19,7 @@ happy_archimedes
 #### Montrer que le conteneur utilise :
 
 - Une arborescence de processus différente:
-( Machine hôte )
+-- ( Machine hôte )
 ```
 [kraken@localhost ~]$ ps -ef | head
 UID        PID  PPID  C STIME TTY          TIME CMD
@@ -34,7 +34,7 @@ root         8     2  0 15:01 ?        00:00:00 [rcu_bh]
 root         9     2  0 15:01 ?        00:00:00 [rcu_sched]
 ```
 
-( Conteneur )
+-- ( Conteneur )
 ```
 / # ps -ef | head
 PID   USER     TIME  COMMAND
@@ -77,7 +77,7 @@ PID   USER     TIME  COMMAND
 ``` 
 
 - Des utilisateurs système différents:
-( Machine hôte )
+-- ( Machine hôte )
 ```
 [kraken@localhost ~]$ cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
@@ -102,7 +102,7 @@ chrony:x:998:996::/var/lib/chrony:/sbin/nologin
 kraken:x:1000:1000:kraken:/home/kraken:/bin/bash
 ```
 
-( Conteneur )
+-- ( Conteneur )
 ```
 / # cat /etc/passwd
 root:x:0:0:root:/root:/bin/ash
@@ -135,7 +135,7 @@ nobody:x:65534:65534:nobody:/:/sbin/nologin
 ```
 
 - Des points de montage différents:
-( Machine hôte )
+-- ( Machine hôte )
 ```
 [kraken@localhost ~]$ df
 Filesystem              1K-blocks    Used Available Use% Mounted on
@@ -148,7 +148,7 @@ tmpfs                      908260       0    908260   0% /sys/fs/cgroup
 tmpfs                      181652       0    181652   0% /run/user/1000
 ```
 
-( Conteneur )
+-- ( Conteneur )
 ```
 / # df
 Filesystem           1K-blocks      Used Available Use% Mounted on
