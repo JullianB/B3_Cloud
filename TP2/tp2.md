@@ -1,6 +1,6 @@
 ## I. Gestion de conteneurs Docker
 
-### - 🌞 Mettre en évidence l'utilisation de chacun des processus liés à Docker :
+#### - 🌞 Mettre en évidence l'utilisation de chacun des processus liés à Docker :
 
 ```bash
 [kraken@localhost etc]$ systemctl status docker | grep -A 3 "CGroup"
@@ -16,7 +16,7 @@ S     0  2032  1207  0  80   0 10852 26921 futex_ ?        00:00:00 containerd-s
 ```
 - containerd est le parent de containerd-shim
 
-### - 🌞 Utiliser l'API HTTP mise à disposition par dockerd :
+#### - 🌞 Utiliser l'API HTTP mise à disposition par dockerd :
 - récupérer la liste des conteneurs
 - récupérer la liste des images disponibles
 
@@ -32,7 +32,7 @@ S     0  2032  1207  0  80   0 10852 26921 futex_ ?        00:00:00 containerd-s
 ----
 ## 1. Namespaces
 
-### - 🌞 Trouver les namespaces utilisés par votre shell :
+#### - 🌞 Trouver les namespaces utilisés par votre shell :
 
 ```
 [kraken@localhost ~]$ ps
@@ -50,7 +50,7 @@ lrwxrwxrwx. 1 kraken kraken 0 16 janv. 19:44 pid -> pid:[4026531836]
 lrwxrwxrwx. 1 kraken kraken 0 16 janv. 19:44 user -> user:[4026531837]
 lrwxrwxrwx. 1 kraken kraken 0 16 janv. 19:44 uts -> uts:[4026531838]
 ```
-### - 🌞 Créer un pseudo-conteneur à la main en utilisant unshare
+#### - 🌞 Créer un pseudo-conteneur à la main en utilisant unshare
 
 ```
 [kraken@localhost ~]$ sudo unshare --fork --pid --mount-proc sh
@@ -60,7 +60,7 @@ root         1  0.0  0.0 115416  1684 pts/0    S    10:52   0:00 sh
 root         2  0.0  0.0 155344  1744 pts/0    R+   10:52   0:00 ps aux
 ```
 
-### - 🌞 Utiliser nsenter pour rentrer dans les namespaces de votre conteneur en y exécutant un shell
+#### - 🌞 Utiliser nsenter pour rentrer dans les namespaces de votre conteneur en y exécutant un shell
 - prouver que vous êtes isolé en terme de réseau, arborescence de processus, points de montage
 
 ```
@@ -79,7 +79,6 @@ kraken    2499  2076  0 11:50 pts/0    00:00:00 grep --color=auto sleep
     link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
     inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
        valid_lft forever preferred_lft forever
-[root@localhost kraken]#
 ```
 ### E. Et alors, les namespaces User ?
 #### -🌞 Mettez en place la configuration nécessaire pour que Docker utilise les namespaces de type User.
@@ -111,8 +110,8 @@ INFO[2020-01-27T13:31:09.979763374+01:00] API listen on /var/run/docker.sock
 
 
 
-### - 🌞 lancer un conteneur simple
-### - 🌞 vérifier le réseau du conteneur
+#### - 🌞 lancer un conteneur simple
+#### - 🌞 vérifier le réseau du conteneur
 
 ```
 [kraken@localhost ~]$ docker inspect frosty_feynman
@@ -132,7 +131,7 @@ INFO[2020-01-27T13:31:09.979763374+01:00] API listen on /var/run/docker.sock
 
 ```
 
-### - 🌞 vérifier le réseau sur l'hôte
+#### - 🌞 vérifier le réseau sur l'hôte
 - vérifier qu'il existe une première carte réseau qui porte une IP dans le même réseau que le conteneur
 - vérifier qu'il existe une deuxième carte réseau, qui est la deuxième interface de la veth pair
 
@@ -255,6 +254,17 @@ ping: socket: Operation not permitted
 socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP) = -1 EACCES (Permission denied)
 socket(AF_INET, SOCK_RAW, IPPROTO_ICMP) = -1 EPERM (Operation not permitted)
 [...]
+```
 
+#### - 🌞 lancer un conteneur NGINX qui a le strict nécessaire de capabilities pour fonctionner
+- prouver qu'il fonctionne
 
+```
+[kraken@localhost cgroup]$ docker run -d -p 8080:80 --cap-drop=all --cap-add=chown --cap-add=setgid --cap-add=setuid --cap-add=net_bind_service nginx:alpine
+[kraken@localhost cgroup]$ curl localhost:8080 | head -4
+[...]
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
 ```
